@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VM Events </title>
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --accent: #ff006e;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+            .logo span {
+                color: var(--primary);
+            }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+            .nav-links li {
+                margin-left: 30px;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                color: var(--dark);
+                font-weight: 500;
+                transition: color 0.3s;
+            }
+
+                .nav-links a:hover {
+                    color: var(--primary);
+                }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+            .hamburger div {
+                width: 25px;
+                height: 3px;
+                background-color: var(--dark);
+                margin: 5px;
+                transition: all 0.3s ease;
+            }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('1.jpg') center/cover no-repeat;
+            color: white;
+            margin-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+            .btn:hover {
+                background-color: #2a76ef;
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            margin-left: 15px;
+        }
+
+            .btn-outline:hover {
+                background-color: white;
+                color: var(--primary);
+            }
+
+        .services {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+            .section-header h2 {
+                font-size: 36px;
+                color: var(--dark);
+                margin-bottom: 15px;
+                position: relative;
+                display: inline-block;
+            }
+
+                .section-header h2::after {
+                    content: '';
+                    position: absolute;
+                    width: 50px;
+                    height: 3px;
+                    background-color: var(--primary);
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+            .section-header p {
+                color: var(--gray);
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+            .service-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+
+        .service-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .service-card p {
+            color: var(--gray);
+        }
+
+
+        <!-- Add this CSS to your style section -->
+        <style >
+        /* New Gallery Section Styles */
+        .gallery {
+            padding: 100px 0;
+            background-color: #f5f7fa;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 250px;
+            transition: transform 0.3s ease;
+        }
+
+            .gallery-item:hover {
+                transform: translateY(-5px);
+            }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+            .gallery-item:hover img {
+                transform: scale(1.1);
+            }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 20px;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h4 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+
+        .gallery-overlay p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .gallery-categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-category {
+            padding: 8px 20px;
+            background-color: white;
+            border-radius: 30px;
+            margin: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+            .gallery-category:hover {
+                background-color: var(--primary);
+                color: white;
+            }
+
+            .gallery-category.active {
+                background-color: var(--primary);
+                color: white;
+            }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+   
+        
+        .testimonials {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background-color: #f5f7fa;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+        
+        .author-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .contact {
+            padding: 100px 0;
+            background-color: #f5f7fa;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+        }
+        
+        .contact-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-details {
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .contact-icon {
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .contact-text h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .contact-text p {
+            color: var(--gray);
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .contact-form textarea {
+            height: 150px;
+            resize: none;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-col p {
+            margin-bottom: 15px;
+            color: #aaa;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #aaa;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .contact-grid,
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .nav-links {
+                position: absolute;
+                right: 0;
+                top: 80px;
+                background-color: white;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                transition: transform 0.5s ease;
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hamburger.active .line1 {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            
+            .hamburger.active .line2 {
+                opacity: 0;
+            }
+            
+            .hamburger.active .line3 {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid,
+            .testimonial-grid,
+             {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">VM <span>Events</span></a>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portfolio">Gallary</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <div class="line1"></div>
+                    <div class="line2"></div>
+                    <div class="line3"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Creating Unforgettable Experiences</h1>
+                <p>VM Events specializes in crafting exceptional events that leave lasting impressions. From social gatherings to dream weddings, we handle every detail.</p>
+                <a href="#contact" class="btn">Get Started</a>
+                <a href="#gallery" class="btn btn-outline">View Our Work</a>  <!-- Changed from #portfolio to #gallery -->
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about" style="padding: 100px 0; background-color: #f5f7fa;">
+        <div class="container">
+            <div class="section-header">
+                <h2>About VM Events</h2>
+                <p>Learn more about our passion for creating exceptional events.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+                <div>
+                    <img src="/api/placeholder/500/400" alt="VM Events Team" style="width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                </div>
+                <div>
+                    <h3 style="font-size: 24px; margin-bottom: 20px; color: var(--primary);">Our Story</h3>
+                    <p style="margin-bottom: 20px; line-height: 1.8;">Founded in 2015, VM Events was born from a passion for creating memorable experiences. What started as a small team with big dreams has grown into a premier event management company known for creativity, attention to detail, and exceptional service.</p>
+                    <p style="margin-bottom: 20px; line-height: 1.8;">Our mission is simple: to transform your vision into reality while exceeding your expectations. We believe that every event tells a unique story, and we're dedicated to making yours unforgettable.</p>
+                    <h3 style="font-size: 24px; margin-bottom: 20px; margin-top: 30px; color: var(--primary);">Why Choose Us</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                            <span>Experienced and passionate team of event specialists</span>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                            <span>Personalized approach to every client and event</span>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                            <span>Creative solutions and attention to detail</span>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; align-items: center;">
+                            <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 10px;"></i>
+                            <span>Strong network of trusted vendors and partners</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Services</h2>
+                <p>We offer comprehensive event management solutions tailored to your specific needs.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/400/300') center/cover no-repeat; color: white; position: relative; overflow: hidden;">
+                    <div class="service-icon" style="color: var(--primary);">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3>Social Gatherings</h3>
+                    <p style="color: rgba(255,255,255,0.8);">Whether it's a milestone birthday, anniversary celebration, or holiday party, we ensure your social event is memorable and enjoyable.</p>
+                </div>
+                <div class="service-card" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/400/300') center/cover no-repeat; color: white; position: relative; overflow: hidden;">
+                    <div class="service-icon" style="color: var(--primary);">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Weddings</h3>
+                    <p style="color: rgba(255,255,255,0.8);">We turn your dream wedding into reality with meticulous planning, stunning designs, and flawless execution.</p>
+                </div>
+                <div class="service-card" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/400/300') center/cover no-repeat; color: white; position: relative; overflow: hidden;">
+                    <div class="service-icon" style="color: var(--primary);">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>Concerts & Shows</h3>
+                    <p style="color: rgba(255,255,255,0.8);">From venue selection to artist management, we handle all aspects of concert and show production.</p>
+                </div>
+                <div class="service-card" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/400/300') center/cover no-repeat; color: white; position: relative; overflow: hidden;">
+                    <div class="service-icon" style="color: var(--primary);">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Event Consultation</h3>
+                    <p style="color: rgba(255,255,255,0.8);">Get expert advice and guidance for your self-planned events to ensure everything runs smoothly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Replace your existing portfolio section with this gallery section -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Gallery</h2>
+                <p>Browse through our collection of memorable events that we've had the pleasure to organize.</p>
+            </div>
+
+            <div class="gallery-categories">
+                <div class="gallery-category active">All</div>
+                <div class="gallery-category">Weddings</div>
+
+                <div class="gallery-category">Birthdays</div>
+
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="weddings">
+                    <img src="/api/placeholder/400/300" alt="Elegant Wedding Reception">
+                    <div class="gallery-overlay">
+                        <h4>Elegant Wedding Reception</h4>
+                        <p>A beautiful lakeside wedding with stunning floral arrangements</p>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="gallery-item" data-category="weddings">
+                    <img src="/api/placeholder/400/300" alt="Garden Wedding">
+                    <div class="gallery-overlay">
+                        <h4>Garden Wedding</h4>
+                        <p>An intimate celebration surrounded by nature</p>
+                    </div>
+                </div>
+
+
+                <div class="gallery-item" data-category="birthdays">
+                    <img src="/api/placeholder/400/300" alt="Birthday Celebration">
+                    <div class="gallery-overlay">
+                        <h4>50th Birthday Celebration</h4>
+                        <p>A glamorous night of dancing and celebration</p>
+                    </div>
+                </div>
+
+
+                <div class="gallery-item" data-category="birthdays">
+                    <img src="/api/placeholder/400/300" alt="Birthday Celebration">
+                    <div class="gallery-overlay">
+                        <h4>50th Birthday Celebration</h4>
+                        <p>A glamorous night of dancing and celebration</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Client Testimonials</h2>
+                <p>Don't just take our word for it. Here's what our clients have to say about working with us.</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "VM Events transformed our company conference into an unforgettable experience. Their attention to detail and creative solutions exceeded our expectations."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <img src="/api/placeholder/80/80" alt="John Doe">
+                        </div>
+                        <div class="author-info">
+                            <h4>John Doe</h4>
+                            <p>Marketing Director, TechCorp</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Our wedding day was absolutely perfect thanks to VM Events. They handled everything flawlessly, allowing us to enjoy every moment without worry."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <img src="/api/placeholder/80/80" alt="Sarah & Michael">
+                        </div>
+                        <div class="author-info">
+                            <h4>Sarah & Michael</h4>
+                            <p>Wedding Clients</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "Working with VM Events on our product launch was a game-changer. Their innovative ideas and professional execution helped us make a strong market impact."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                            <img src="/api/placeholder/80/80" alt="Emily Chen">
+                        </div>
+                        <div class="author-info">
+                            <h4>Emily Chen</h4>
+                            <p>CEO, Innovate Solutions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contact Us</h2>
+                <p>Ready to create your next extraordinary event? Reach out today to discuss your ideas.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Location</h4>
+                                <p>123 Event Street, Suite 400<br>New York, NY 10001</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Phone</h4>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Email</h4>
+                                <p>info@vmevents.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h4>Working Hours</h4>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                     
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px; text-align: center;">
+                        <h3 style="margin-bottom: 20px; color: var(--primary);">Ready to Plan Your Event?</h3>
+                        <p style="margin-bottom: 25px;">We're excited to help bring your vision to life. Contact us using the information provided or follow us on social media.</p>
+                        <a href="mailto:info@vmevents.com" class="btn" style="display: inline-block; margin-bottom: 0;">Email Us Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>About VM Events</h3>
+                    <p>VM Events is a premier event management company specializing in creating exceptional experiences for corporate and private clients.</p>
+                    <p>With our expertise and creative approach, we transform your vision into unforgettable events.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Social Gatherings</a></li>
+                        <li><a href="#">Weddings</a></li>
+                        <li><a href="#">Concerts & Shows</a></li>
+                        <li><a href="#">Event Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for event tips, trends, and company updates.</p>
+                    <form>
+                        <input type="email" placeholder="Your Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #333;">
+                        <button type="submit" class="btn" style="width: 100%;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VM Events. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll Animation for Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 0);
+        });
+
+        // Gallery filtering functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const categories = document.querySelectorAll('.gallery-category');
+            const items = document.querySelectorAll('.gallery-item');
+
+            // Add click event to each category
+            categories.forEach(category => {
+                category.addEventListener('click', function () {
+                    // Remove active class from all categories
+                    categories.forEach(c => c.classList.remove('active'));
+
+                    // Add active class to clicked category
+                    this.classList.add('active');
+
+                    // Get category name
+                    const selectedCategory = this.textContent.toLowerCase();
+
+                    // Filter gallery items
+                    items.forEach(item => {
+                        if (selectedCategory === 'all' || item.getAttribute('data-category') === selectedCategory) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
